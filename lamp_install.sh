@@ -12,7 +12,7 @@ rm /var/www/html/index.html
 a2dissite 000-default.conf
 
 # set fail2ban up
-rm /etc/fail2ban/jail.d/defaults-debian.conf
+rm /etc/fail2ban/jail.d/*.conf
 touch /etc/fail2ban/jail.d/${HOSTNAME}_fail2ban.conf
 
 printf '%s\n' \
