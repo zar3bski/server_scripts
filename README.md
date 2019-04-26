@@ -1,5 +1,7 @@
 
-##Usage
+## Usage
+
+This script have been written with **Debian** 9 stretch in mind and comes with no guarantee on other distributions / versions
 
 As root: 
 ```
@@ -9,7 +11,7 @@ chmod +x lamp_install.sh
 ./lamp_install.sh
 ```
 
-##Purpose
+## Purpose
 
 Installed Services:
 
