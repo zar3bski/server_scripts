@@ -23,3 +23,14 @@ useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash
 usermod -aG docker gitlab-runner
 gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
 gitlab-runner start
+
+# Install fail2ban on ssh
+echo Y | apt-get install fail2ban
+rm /etc/fail2ban/jail.d/*.conf
+touch /etc/fail2ban/jail.d/${HOSTNAME}_fail2ban.conf
+printf '%s\n' \
+   "[sshd]" \
+   "enabled = true" \
+   " " \
+   >> /etc/fail2ban/jail.d/${HOSTNAME}_fail2ban.conf
+   
