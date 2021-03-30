@@ -29,7 +29,7 @@ if [ -f "/root/keys/mina/my-wallet" ]; then
 else
     printf "generating keys at ${RED}/root/keys/mina${NC}\n"
     docker run  --interactive --tty --rm --volume /root/keys/mina:/keys minaprotocol/generate-keypair:$KEY_GENERATOR_VERSION -privkey-path /keys/my-wallet
-    chmod 600 /root/keys/mina/my-wallet
+    chmod 700 /root/keys/mina
 fi
 
 
