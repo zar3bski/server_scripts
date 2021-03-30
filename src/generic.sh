@@ -13,11 +13,3 @@ distro=$(lsb_release -i | cut -f 2-)
 arch=$(uname -m | sed 's/x86_//;s/i[3-6]86/32/')
 version=$(awk '/DISTRIB_RELEASE=/' /etc/*-release | sed 's/DISTRIB_RELEASE=//' | sed 's/[.]0/./')
 
-if [ $arch = "aarch64" ] ; then
-    arch="arm64"
-elif [ $arch = "64" ] ;then
-    arch="amd64"
-else
-    printf "install script for ${RED}ARM/AMD 64bits architecture${NC} only!"
-    exit
-fi
