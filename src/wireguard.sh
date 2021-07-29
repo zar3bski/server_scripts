@@ -63,4 +63,5 @@ printf "Wireguard successfully set up to listen to port ${WIREGUARD_PORT} on wg0
  you can now ${RED} set your first client up${NC} using $(hostname) ${RED}publickey${NC}\n
         ${PUBLIC_KEY}\n
 Once done, register your client with\n
-wg set wg0 peer ${RED}<CLIENT_PUBLIC_KEY>${NC} allowed-ips ${RED}<ALLOWED IP>${NC}\n"
+    wg set wg0 peer ${RED}<CLIENT_PUBLIC_KEY>${NC} allowed-ips ${RED}<ALLOWED IP>${NC}\n
+NB: ${RED}ALLOWED IP${NC} are not IPs the client can reach but the IPs he can 'endorse'"
