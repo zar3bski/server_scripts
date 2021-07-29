@@ -55,7 +55,7 @@ systemctl start wg-quick@wg0
 # Networking and Firewall Configuration
 
 sed -i 's/.*net.ipv4.ip_forward=.*/net.ipv4.ip_forward=1/' /etc/sysctl.conf
-sysctl -p
+sysctl -p /etc/sysctl.conf
 
 ufw allow $WIREGUARD_PORT/udp || echo "Failed to allow port ${WIREGUARD_PORT} using ${RED}UFW${NC}"
 
