@@ -1,5 +1,8 @@
 #!/bin/bash
 
+source ./src/generic.sh
+log "LAMP install on ${distro} ${version}"
+
 # add custom repo
 echo Y | add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
 echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/sources.list

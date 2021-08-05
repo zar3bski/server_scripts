@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# on Debian based systems, as root
-
-RED='\033[0;31m'
-NC='\033[0m'
-
+source ./src/generic.sh
+log "Helium hotspot install on ${distro} ${version}"
 # checks
 
 if [[ -z "${REGION_OVERRIDE}" ]]; then
@@ -19,33 +16,25 @@ if [[ -z "${VERSION}" ]]; then
   VERSION="2021.03.22.0"
 fi
 
-if [ "$EUID" -ne 0 ]
-then echo "Please run as root"
-    exit
-fi
-
 if [ ! -f "/etc/debian_version" ]; then
    printf "install script for ${RED}Debian based OS${NC} only!"
 fi
 
-distro=$(lsb_release -i | cut -f 2-)
-arch=$(uname -m | sed 's/x86_//;s/i[3-6]86/32/')
-version=$(awk '/DISTRIB_RELEASE=/' /etc/*-release | sed 's/DISTRIB_RELEASE=//' | sed 's/[.]0/./')
 
 if [ $arch = "aarch64" ] ; then
     arch="arm64"
 elif [ $arch = "64" ] ;then
     arch="amd64"
 else
-    printf "install script for ${RED}ARM/AMD 64bits architecture${NC} only!"
+    log "install script for $(bold ARM/AMD 64bits architecture) only!" error
     exit
 fi
 
 if [ -x "$(command -v docker)" ]; then
-    echo "Docker already installed, skipping this step"
+    log "Docker already installed, skipping this step"
     # command
 else
-    echo "Install docker on ${distro} ${version}"
+    log "Install docker on ${distro} ${version}"
     apt-get remove docker docker-engine docker.io containerd runc
     apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -57,7 +46,7 @@ else
     apt-get install -y docker-ce docker-ce-cli containerd.io
 fi
 
-printf "Miner ${RED}installation${NC}"
+log "Miner $(bold installation)"
 
 mkdir /root/miner_data
 mkdir /root/miner_logs
@@ -73,7 +62,7 @@ docker run -d --restart always \
 quay.io/team-helium/miner:miner-${arch}_${VERSION}_GA
 
 
-printf "Check ${RED}connexion${NC} and ${RED}blockchain processing${NC}"
+log "Check $(bold connexion) and $(bold blockchain processing)"
 
 # general info
 docker exec helium-miner miner peer book -s
@@ -82,4 +71,4 @@ docker exec helium-miner miner peer book -s
 docker exec helium-miner miner info height
 curl https://api.helium.io/v1/blocks/height
 
-printf "POST INSTALL steps: you should ${RED}backup${NC} ~/miner_data/miner/swarm_key"
+log "POST INSTALL steps: you should $(bold backup) ~/miner_data/miner/swarm_key"
