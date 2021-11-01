@@ -5,40 +5,40 @@ source ./src/generic.sh
 if [ $arch = "64" ]; then
     arch="amd64"
 else
-    printf "install script for ${RED}AMD 64bits architecture${NC} only!\n"
+    log "install script for $(bold AMD 64bits architecture only)!" error
     exit
 fi
 
 if [ -x "$(command -v docker)" ]; then
-    echo "Docker already installed, skipping this step"
+    log "Docker already installed, skipping this step"
 else
     source ./src/install_docker.sh
 fi
 
 if [ -z ${KEY_GENERATOR_VERSION+x} ]; then
     KEY_GENERATOR_VERSION=1.0.2-06f3c5c
-    echo "KEY_GENERATOR_VERSION is unset. Using ${KEY_GENERATOR_VERSION}"
+    log "KEY_GENERATOR_VERSION is unset. Using ${KEY_GENERATOR_VERSION}"
 fi
 
 if [ -z ${MINA_WORKER_VERSION+x} ]; then
     MINA_WORKER_VERSION=1.1.4-a8893ab
-    echo "MINA_WORKER_VERSION is unset. Using ${MINA_WORKER_VERSION}"
+    log "MINA_WORKER_VERSION is unset. Using ${MINA_WORKER_VERSION}"
 fi
 
-printf "${RED}Keypair ${NC}generation"
+log "Keypair generation"
 
 if [ -f "/root/keys/mina/my-wallet" ]; then
-    printf "Keypair ${RED}already exists${NC} at /root/keys/mina\nChecking conformity\n"
+    log "Keypair $(bold already exists) at /root/keys/mina\nChecking conformity"
     docker run --interactive --tty --rm --entrypoint=mina-validate-keypair --volume /root/keys/mina:/keys minaprotocol/generate-keypair:$KEY_GENERATOR_VERSION -privkey-path /keys/my-wallet
 else
-    printf "generating keys at ${RED}/root/keys/mina${NC}\n"
+    log "generating keys at $(underline /root/keys/mina)"
     docker run --interactive --tty --rm --volume /root/keys/mina:/keys minaprotocol/generate-keypair:$KEY_GENERATOR_VERSION -privkey-path /keys/my-wallet
     chmod 700 /root/keys/mina
 fi
 
 mkdir -p /root/.mina-config
 
-printf "Re-enter one last time your ${RED}private key password${NC} (the one you choose when generating your key pair): \n"
+log "Re-enter one last time your $(bold private key password) (the one you choose when generating your key pair): \n"
 read -sp 'Enter password: ' PRIVATE_PASS
 
 if [ ! "$(docker ps -q -f name=mina_deamon)" ]; then
@@ -47,7 +47,7 @@ if [ ! "$(docker ps -q -f name=mina_deamon)" ]; then
         docker rm mina_deamon
     fi
 
-    echo "Launching mina_worker"
+    log "Launching mina_worker"
 
     docker run --name mina_deamon -d \
         -p 8302:8302 \
